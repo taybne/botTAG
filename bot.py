@@ -12,9 +12,11 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = int(os.getenv("ADMIN_ID") or 0)
 
 if not BOT_TOKEN:
-    raise Exception("BOT_TOKEN not set in .env")
+    print("⚠️ BOT_TOKEN not set, using dummy")
+    BOT_TOKEN = "dummy_token"
 if not ADMIN_ID:
-    raise Exception("ADMIN_ID not set in .env")
+    print("⚠️ ADMIN_ID not set, using dummy")
+    ADMIN_ID = 0
 
 # ===== Команды бота =====
 async def set_commands(bot: Bot):
@@ -36,3 +38,4 @@ async def on_startup():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
