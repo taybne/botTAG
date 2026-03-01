@@ -1,0 +1,38 @@
+import asyncio
+import os
+from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.types import BotCommand
+from dotenv import load_dotenv
+from handlers import router
+
+# ===== Загрузка переменных из .env =====
+load_dotenv()
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+ADMIN_ID = int(os.getenv("ADMIN_ID") or 0)
+
+if not BOT_TOKEN:
+    raise Exception("BOT_TOKEN not set in .env")
+if not ADMIN_ID:
+    raise Exception("ADMIN_ID not set in .env")
+
+# ===== Команды бота =====
+async def set_commands(bot: Bot):
+    commands = [
+        BotCommand(command="start", description="Start TAG"),
+        BotCommand(command="add", description="Add location"),
+        BotCommand(command="feedback", description="Send feedback"),
+    ]
+    await bot.set_my_commands(commands)
+
+import uvicorn
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.on_event("startup")
+async def on_startup():
+    asyncio.create_task(main())
+
+if __name__ == "__main__":
+    asyncio.run(main())
