@@ -27,14 +27,16 @@ async def set_commands(bot: Bot):
     ]
     await bot.set_my_commands(commands)
 
-import uvicorn
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.on_event("startup")
-async def on_startup():
-    asyncio.create_task(main())
+# ===== Основной запуск =====
+async def main():
+    bot = Bot(token=BOT_TOKEN)
+    dp = Dispatcher(storage=MemoryStorage())
+    dp.include_router(router)
+    
+    await set_commands(bot)
+    
+    print("TAG bot started...")
+    await dp.start_polling(bot)
 
 if __name__ == "__main__":
     asyncio.run(main())
