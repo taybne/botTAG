@@ -1,3 +1,5 @@
+import random
+
 from aiogram import Router, F
 from aiogram.filters import StateFilter
 from aiogram.types import (
@@ -19,7 +21,8 @@ ADMIN_ID = int(os.getenv("ADMIN_ID") or 0)
 menu = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="📍 Add location")],
-        [KeyboardButton(text="💬 Feedback")]
+        [KeyboardButton(text="💬 Feedback")],
+        [KeyboardButton(text="🔐 Verify")]
     ],
     resize_keyboard=True
 )
@@ -41,6 +44,15 @@ async def start(message: Message):
         "Welcome to TAG 🌍\nSend locations or feedback.",
         reply_markup=menu
     )
+
+@router.message(F.text == "🔐 Verify")
+async def start_verification(message: Message):
+    verification_code = random.randint(1000, 9999)
+    await message.answer(
+        f"Ваш регистрационный код: <b>{verification_code}</b>\n"
+        "Сохраните его и используйте в приложении для регистрации."
+    )
+
 # ===== ADD LOCATION =====
 @router.message(F.text == "📍 Add location")
 async def add_location_start(message: Message, state: FSMContext):
